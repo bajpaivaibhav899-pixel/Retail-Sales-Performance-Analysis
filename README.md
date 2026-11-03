@@ -26,7 +26,7 @@ The project covers the complete pipeline:
 
 ## 📂 Project Files
 *   `app.py` → Python Flask Backend API
-*   `index.html` → Interactive Dashboard Frontend
+*   `bajpai.html` → Interactive Dashboard Frontend
 *   `Data_Analysis_Notebook.pdf` → Python Code & Analysis (Colab export)
 *   `Project_Report.pdf` → Detailed Project Documentation
 *   `Presentation.pdf` → Project PPT
