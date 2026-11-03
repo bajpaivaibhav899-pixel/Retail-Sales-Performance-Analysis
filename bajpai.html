@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retail Analytics | DA-001</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .sidebar-link.active { background: rgba(6,182,212,0.15); color: #22d3ee; border-right: 3px solid #06b6d4; }
+    .page { display: none; }
+    .page.active { display: block; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+  <!-- ==================== LOGIN PAGE ==================== -->
+  <div id="loginPage" class="min-h-screen flex">
+    <div class="hidden lg:flex w-1/2 bg-slate-900 text-white flex-col justify-center items-center p-12 relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-br from-cyan-600/20 to-indigo-700/20"></div>
+      <div class="relative z-10 text-center max-w-md">
+        <h1 class="text-4xl font-bold mb-4">Welcome back!</h1>
+        <p class="text-slate-300 mb-8">Retail Sales Performance Analysis Dashboard</p>
+        <div class="bg-slate-800/80 rounded-2xl p-6 text-left">
+          <p class="text-sm text-slate-400 mb-2">Project ID: DA-001</p>
+          <p class="text-lg font-semibold">Live Backend Connected</p>
+          <p class="text-sm text-slate-400 mt-1">1,000 Transactions Analyzed</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-8">
+      <div class="w-full max-w-md">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="w-10 h-10 bg-cyan-600 rounded-xl flex items-center justify-center text-white">
+            <i class="fa-solid fa-chart-line"></i>
+          </div>
+          <div>
+            <h2 class="font-bold text-lg">Retail Analytics</h2>
+            <p class="text-xs text-slate-500">DA-001 | Vaibhav Bajpai</p>
+          </div>
+        </div>
+
+        <h3 class="text-2xl font-bold mb-1">Login to your account</h3>
+        <p class="text-slate-500 text-sm mb-6">Enter any email & password to continue</p>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Email Address</label>
+            <input id="email" type="email" placeholder="Enter your email" 
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 outline-none">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Password</label>
+            <input id="password" type="password" placeholder="Enter password" 
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 outline-none">
+          </div>
+          <button onclick="doLogin()" 
+            class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition">
+            Login
+          </button>
+        </div>
+        <p class="text-center text-xs text-slate-400 mt-6">Demo Login — any credentials will work</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN APP ==================== -->
+  <div id="mainApp" class="hidden min-h-screen flex">
+
+    <aside class="w-64 bg-slate-900 text-white flex flex-col fixed h-full z-40">
+      <div class="p-5 border-b border-slate-700 flex items-center gap-3">
+        <div class="w-9 h-9 bg-cyan-500 rounded-lg flex items-center justify-center">
+          <i class="fa-solid fa-store"></i>
+        </div>
+        <div>
+          <div class="font-bold text-sm">Retail Analytics</div>
+          <div class="text-[10px] text-slate-400">Admin Panel</div>
+        </div>
+      </div>
+
+      <nav class="flex-1 p-3 space-y-1">
+        <a href="#" onclick="showPage('dashboard')" class="sidebar-link active flex items-center gap-3 px-4 py-3 rounded-lg text-sm hover:bg-slate-800 transition">
+          <i class="fa-solid fa-grid-2 w-5"></i> Dashboard
+        </a>
+        <a href="#" onclick="showPage('categories')" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800 transition">
+          <i class="fa-solid fa-tags w-5"></i> Categories
+        </a>
+        <a href="#" onclick="showPage('insights')" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800 transition">
+          <i class="fa-solid fa-lightbulb w-5"></i> Insights
+        </a>
+        <a href="#" onclick="showPage('reports')" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800 transition">
+          <i class="fa-solid fa-file-lines w-5"></i> Reports
+        </a>
+      </nav>
+
+      <div class="p-4 border-t border-slate-700">
+        <div class="text-xs text-slate-400">Logged in as</div>
+        <div class="font-medium text-sm">Vaibhav Bajpai</div>
+        <button onclick="doLogout()" class="mt-3 text-xs text-red-400 hover:text-red-300">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
+      </div>
+    </aside>
+
+    <main class="ml-64 flex-1 p-6">
+
+      <!-- ===== DASHBOARD PAGE ===== -->
+      <div id="dashboard" class="page active">
+        <h1 class="text-2xl font-bold mb-6">Dashboard Overview</h1>
+
+        <!-- KPIs (Maine inme ID add kar di hai backend se connect karne ke liye) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+            <div class="text-sm text-slate-500">Total Revenue</div>
+            <div class="text-2xl font-bold mt-1" id="kpi-revenue">Loading...</div>
+            <div class="text-xs text-emerald-500 mt-1">From Live API</div>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+            <div class="text-sm text-slate-500">Total Orders</div>
+            <div class="text-2xl font-bold mt-1" id="kpi-orders">Loading...</div>
+            <div class="text-xs text-slate-400 mt-1">Transactions</div>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+            <div class="text-sm text-slate-500">Units Sold</div>
+            <div class="text-2xl font-bold mt-1" id="kpi-units">Loading...</div>
+            <div class="text-xs text-slate-400 mt-1">Total quantity</div>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+            <div class="text-sm text-slate-500">Average Order Value</div>
+            <div class="text-2xl font-bold mt-1" id="kpi-aov">Loading...</div>
+            <div class="text-xs text-slate-400 mt-1">Per order</div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+            <h3 class="font-semibold mb-4">Monthly Revenue Trend</h3>
+            <canvas id="trendChart" height="200"></canvas>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+            <h3 class="font-semibold mb-4">Revenue by Category</h3>
+            <canvas id="catChart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== CATEGORIES PAGE ===== -->
+      <div id="categories" class="page">
+        <h1 class="text-2xl font-bold mb-6">Category Performance</h1>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-slate-500">
+              <tr>
+                <th class="text-left p-4">Category</th>
+                <th class="text-right p-4">Revenue</th>
+                <th class="text-right p-4">Units Sold</th>
+                <th class="text-right p-4">Orders</th>
+              </tr>
+            </thead>
+            <tbody id="category-table-body">
+              <!-- Data backend se yahan aayega -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== INSIGHTS PAGE ===== -->
+      <div id="insights" class="page">
+        <h1 class="text-2xl font-bold mb-6">5 Key Insights</h1>
+        <div class="space-y-4">
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex gap-4">
+            <div class="w-8 h-8 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center font-bold text-sm">1</div>
+            <p id="insight-1">Loading insight...</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex gap-4">
+            <div class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold text-sm">2</div>
+            <p>Clothing has the highest orders (351), followed by Electronics (342) and Beauty (307).</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex gap-4">
+            <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold text-sm">3</div>
+            <p>Clear monthly seasonality — Peak in May (₹53.1k) and October (₹46.5k).</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex gap-4">
+            <div class="w-8 h-8 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center font-bold text-sm">4</div>
+            <p>Electronics & Clothing are the main revenue drivers.</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex gap-4">
+            <div class="w-8 h-8 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center font-bold text-sm">5</div>
+            <p>Gender-wise revenue is fairly balanced — store appeals to both male & female customers.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== REPORTS PAGE ===== -->
+      <div id="reports" class="page">
+        <h1 class="text-2xl font-bold mb-6">Project Reports</h1>
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <h3 class="font-semibold mb-3">Retail Sales Performance Analysis (DA-001)</h3>
+          <p class="text-sm text-slate-500 mb-4">BTech Intro to Data Analytics | Group BT_DA_13 | Mentor: Nitish Sheoran</p>
+          <ul class="text-sm space-y-2 text-slate-600">
+            <li>• Complete Python analysis notebook available</li>
+            <li>• Interactive HTML Dashboard (Connected to Flask API)</li>
+            <li>• Dataset: 1,000 transactions from Kaggle</li>
+            <li>• Tools: Python, Pandas, Flask, Chart.js</li>
+          </ul>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // 1. VARIABLES
+    let trendChartInstance = null;
+    let catChartInstance = null;
+
+    // 2. LOGIN LOGIC
+    function doLogin() {
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('mainApp').classList.remove('hidden');
+      
+      // Jab login ho jaye, tab backend se data laao
+      fetchDashboardData();
+    }
+
+    function doLogout() {
+      document.getElementById('mainApp').classList.add('hidden');
+      document.getElementById('loginPage').classList.remove('hidden');
+    }
+
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+    }
+
+    // 3. BACKEND SE DATA LAAO (API CALLS)
+    function fetchDashboardData() {
+      // A. KPIs Fetch Karo
+      fetch('http://127.0.0.1:5000/api/kpis')
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('kpi-revenue').innerText = '₹' + data.total_revenue.toLocaleString('en-IN');
+            document.getElementById('kpi-orders').innerText = data.total_orders;
+            document.getElementById('kpi-units').innerText = data.total_units_sold;
+            document.getElementById('kpi-aov').innerText = '₹' + data.average_order_value;
+            
+            // Insight 1 ko update karo
+            document.getElementById('insight-1').innerHTML = `Total Revenue of <strong>₹${data.total_revenue.toLocaleString('en-IN')}</strong> generated from ${data.total_orders} transactions with AOV of ₹${data.average_order_value}.`;
+        })
+        .catch(err => console.log("KPI Error:", err));
+
+      // B. Categories Fetch Karo (Table aur Bar Chart ke liye)
+      fetch('http://127.0.0.1:5000/api/category-performance')
+        .then(res => res.json())
+        .then(data => {
+            // Table update karo
+            const tableBody = document.getElementById('category-table-body');
+            tableBody.innerHTML = '';
+            data.forEach(item => {
+                tableBody.innerHTML += `
+                  <tr class="border-t">
+                    <td class="p-4 font-medium text-cyan-600">${item['Product Category']}</td>
+                    <td class="p-4 text-right">₹${item['Total Amount'].toLocaleString('en-IN')}</td>
+                    <td class="p-4 text-right">${item['Quantity']}</td>
+                    <td class="p-4 text-right">${item['Orders']}</td>
+                  </tr>
+                `;
+            });
+            
+            // Bar Chart render karo
+            renderCategoryChart(data);
+        })
+        .catch(err => console.log("Category Error:", err));
+
+      // C. Monthly Revenue Fetch Karo (Line Chart ke liye)
+      fetch('http://127.0.0.1:5000/api/monthly-revenue')
+        .then(res => res.json())
+        .then(data => {
+            renderTrendChart(data);
+        })
+        .catch(err => console.log("Monthly Error:", err));
+    }
+
+    // 4. CHART RENDER KARNE WALE FUNCTIONS
+    function renderTrendChart(data) {
+      if(trendChartInstance) trendChartInstance.destroy(); // Purana chart hatao
+
+      const labels = data.map(item => item.Month);
+      const revenues = data.map(item => item.Revenue);
+
+      trendChartInstance = new Chart(document.getElementById('trendChart'), {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: revenues,
+            borderColor: '#06b6d4',
+            backgroundColor: 'rgba(6,182,212,0.1)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: { plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => '₹'+(v/1000)+'k' } } } }
+      });
+    }
+
+    function renderCategoryChart(data) {
+      if(catChartInstance) catChartInstance.destroy(); // Purana chart hatao
+
+      const labels = data.map(item => item['Product Category']);
+      const revenues = data.map(item => item['Total Amount']);
+
+      catChartInstance = new Chart(document.getElementById('catChart'), {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: revenues,
+            backgroundColor: ['#06b6d4','#6366f1','#a855f7'],
+            borderRadius: 6
+          }]
+        },
+        options: { plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => '₹'+(v/1000)+'k' } } } }
+      });
+    }
+  </script>
+</body>
+</html>
