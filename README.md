@@ -36,7 +36,7 @@ To test this project on your own machine:
 1. Clone this repository.
 2. Install backend dependencies: `pip install flask flask-cors`
 3. Run the backend server: `python app.py`
-4. Open `index.html` in your browser to view the dashboard connected to the live API.
+4. Open `bajpai.html` in your browser to view the dashboard connected to the live API.
 
 ## 💡 Key Insights
 1. Electronics leads revenue generation (34.4%), but categories are closely balanced.
